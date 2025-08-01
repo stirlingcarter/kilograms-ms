@@ -79,61 +79,9 @@ Create a new IAM policy with the JSON below and attach it to the IAM user or rol
         {
             "Sid": "TerraformEC2",
             "Effect": "Allow",
-            "Action": [
-                "ec2:DescribeInstances",
-                "ec2:CreateSecurityGroup",
-                "ec2:DeleteSecurityGroup",
-                "ec2:AuthorizeSecurityGroupIngress",
-                "ec2:AuthorizeSecurityGroupEgress",
-                "ec2:RevokeSecurityGroupIngress",
-                "ec2:RevokeSecurityGroupEgress",
-                "ec2:RunInstances",
-                "ec2:TerminateInstances",
-                "ec2:DescribeVolumes",
-                "ec2:CreateVolume",
-                "ec2:DeleteVolume",
-                "ec2:AttachVolume",
-                "ec2:DetachVolume",
-                "ec2:DescribeKeyPairs",
-                "ec2:DescribeSecurityGroups",
-                "ec2:DescribeSubnets",
-                "ec2:DescribeVpcs",
-                "ec2:DescribeAmis"
-            ],
+            "Action": "ec2:*",
             "Resource": "*"
         }
     ]
 }
-```
-
-### 5. Configure GitHub Secrets
-
-You need to add the following secrets to your GitHub repository's settings (`Settings > Secrets and variables > Actions > New repository secret`):
-
--   `AWS_ACCESS_KEY_ID`: Your AWS access key ID.
--   `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
--   `AWS_KEY_NAME`: The name of the EC2 key pair you created in the previous step.
--   `AWS_PRIVATE_KEY`: The private key portion of the EC2 key pair you created.
--   `MEILI_MASTER_KEY`: A secure master key for your Meilisearch instance. You should generate a strong random string for this.
-
-### 6. Deploy
-
-Push your changes to the `main` branch. The GitHub Actions workflow will automatically run and deploy your Meilisearch instance.
-
-### 7. Access Meilisearch
-
-After the deployment is complete, you can find the public IP address of your EC2 instance in the output of the GitHub Actions workflow. You can also get it by running `terraform -chdir=terraform output meilisearch_public_ip` locally (assuming you have Terraform and your AWS credentials configured).
-
-You can then use the Python application in the `app` directory to interact with your Meilisearch instance by setting the following environment variables:
-
-```bash
-export MEILI_URL="http://<your-ec2-instance-ip>:7700"
-export MEILI_MASTER_KEY="<your-meili-master-key>"
-```
-
-Then run the application:
-
-```bash
-pip install -r app/requirements.txt
-python app/main.py
 ```
