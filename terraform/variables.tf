@@ -4,12 +4,6 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "aws_ami" {
-  description = "The AMI to use for the EC2 instance. Amazon Linux 2 is recommended."
-  type        = string
-  default     = "ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI (HVM), SSD Volume Type in us-east-1
-}
-
 variable "instance_type" {
   description = "The EC2 instance type."
   type        = string
