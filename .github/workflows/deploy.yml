@@ -34,11 +34,14 @@ jobs:
           terraform -chdir=terraform apply -auto-approve \
             -var="key_name=${{ secrets.AWS_KEY_NAME }}"
       
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Get Public IP
         id: public_ip
         shell: bash
         run: |
-          IP_ADDRESS=$(terraform -chdir=terraform output -raw meilisearch_public_ip | head -n 1)
+          IP_ADDRESS=$(terraform -chdir=terraform output -json | jq -r .meilisearch_public_ip.value)
           echo "ip=$IP_ADDRESS" >> $GITHUB_OUTPUT
 
       - name: Print Public IP
