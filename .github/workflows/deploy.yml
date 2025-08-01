@@ -36,14 +36,23 @@ jobs:
       
       - name: Get Public IP
         id: public_ip
-        run: echo "::set-output name=ip::$(terraform -chdir=terraform output -raw meilisearch_public_ip)"
+        run: |
+          PUBLIC_IP=$(terraform -chdir=terraform output -raw meilisearch_public_ip)
+          echo "ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
+          echo "Public IP is: $PUBLIC_IP"
+
+      - name: Wait for EC2 to be ready
+        run: |
+          echo "Waiting 60 seconds for EC2 instance to fully boot..."
+          sleep 60
 
       - name: Setup MeiliSearch on EC2
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ steps.public_ip.outputs.ip }}
           username: ec2-user
           key: ${{ secrets.AWS_PRIVATE_KEY }}
+          timeout: 300s
           script: |
             sudo yum update -y
             sudo amazon-linux-extras install docker -y
