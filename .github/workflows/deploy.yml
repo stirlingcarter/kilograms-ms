@@ -38,8 +38,11 @@ jobs:
         id: public_ip
         run: echo "ip=$(terraform -chdir=terraform output -raw meilisearch_public_ip | head -n 1)" >> $GITHUB_OUTPUT
 
+      - name: Print Public IP
+        run: echo "The IP address is ${{ steps.public_ip.outputs.ip }}"
+
       - name: Setup MeiliSearch on EC2
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ steps.public_ip.outputs.ip }}
           username: ec2-user
