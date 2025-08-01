@@ -36,7 +36,10 @@ jobs:
       
       - name: Get Public IP
         id: public_ip
-        run: echo "ip=$(terraform -chdir=terraform output -raw meilisearch_public_ip | head -n 1)" >> $GITHUB_OUTPUT
+        shell: bash
+        run: |
+          IP_ADDRESS=$(terraform -chdir=terraform output -raw meilisearch_public_ip | head -n 1)
+          echo "ip=$IP_ADDRESS" >> $GITHUB_OUTPUT
 
       - name: Print Public IP
         run: echo "The IP address is ${{ steps.public_ip.outputs.ip }}"
