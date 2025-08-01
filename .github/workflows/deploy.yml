@@ -42,11 +42,6 @@ jobs:
           echo "ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
           echo "Public IP is: $PUBLIC_IP"
 
-      - name: Wait for EC2 to be ready
-        run: |
-          echo "Waiting 60 seconds for EC2 instance to fully boot..."
-          sleep 60
-
       - name: Setup MeiliSearch on EC2
         uses: appleboy/ssh-action@v0.1.5
         with:
@@ -72,7 +67,7 @@ jobs:
             
             sudo mkdir -p /data/meili_data
             
-            docker run -d --restart always \
+            sudo docker run -d --restart always \
               -p 7700:7700 \
               -v /data/meili_data:/meili_data \
               --env MEILI_MASTER_KEY='${{ secrets.MEILI_MASTER_KEY }}' \
