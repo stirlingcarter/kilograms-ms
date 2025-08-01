@@ -34,25 +34,14 @@ jobs:
           terraform -chdir=terraform apply -auto-approve \
             -var="key_name=${{ secrets.AWS_KEY_NAME }}"
       
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
       - name: Get Public IP
         id: public_ip
-        shell: bash
-        run: |
-          IP_ADDRESS=$(terraform -chdir=terraform output -json | jq -r .meilisearch_public_ip.value)
-          echo "ip=$IP_ADDRESS" >> $GITHUB_OUTPUT
-
-      - name: Print Public IP
-        run: echo "The IP address is ${{ steps.public_ip.outputs.ip }}"
+        run: echo "::set-output name=ip::$(terraform -chdir=terraform output -raw meilisearch_public_ip)"
 
       - name: Setup MeiliSearch on EC2
-        uses: appleboy/ssh-action@v1.0.3
-        env:
-          EC2_IP: ${{ steps.public_ip.outputs.ip }}
+        uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.EC2_IP }}
+          host: ${{ steps.public_ip.outputs.ip }}
           username: ec2-user
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           script: |
