@@ -36,7 +36,7 @@ jobs:
       
       - name: Get Public IP
         id: public_ip
-        run: echo "ip=$(terraform -chdir=terraform output -raw meilisearch_public_ip)" >> $GITHUB_OUTPUT
+        run: echo "ip=$(terraform -chdir=terraform output -raw meilisearch_public_ip | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Setup MeiliSearch on EC2
         uses: appleboy/ssh-action@master
