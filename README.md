@@ -31,8 +31,14 @@ Create a new repository on GitHub and push the code from this project.
 
 -   Ensure you have an AWS account with the necessary permissions to create EC2 instances, EBS volumes, and security groups.
 -   Create an EC2 key pair in the AWS console. You will need the name of this key pair for the GitHub secrets.
+-   **Create an S3 Bucket**: Create a private S3 bucket with versioning enabled to store the Terraform state file (`terraform.tfstate`).
+-   **Create a DynamoDB Table**: Create a DynamoDB table with a primary key named `LockID` (String type). This is for Terraform state locking.
 
-### 3. Configure GitHub Secrets
+### 3. Configure `backend.tf`
+
+Update the `terraform/backend.tf` file with the names of the S3 bucket and DynamoDB table you just created.
+
+### 4. Configure GitHub Secrets
 
 You need to add the following secrets to your GitHub repository's settings (`Settings > Secrets and variables > Actions > New repository secret`):
 
